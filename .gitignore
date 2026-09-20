@@ -1,0 +1,23 @@
+# Zależności
+/vendor/
+
+# Konfiguracja lokalna
+.env
+.env.local
+*.local.php
+
+# Logi i cache
+*.log
+/cache/
+/tmp/
+.phpunit.result.cache
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# System
+.DS_Store
+Thumbs.db
