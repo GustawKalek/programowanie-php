@@ -21,7 +21,7 @@
             $html = "<h2>Klasa: {$this->name}</h2>";
 
             if ($this->teacher !== null) {
-                $html .= "<h3>Nauczyciel</h3>";
+                $html .= "<h3>Wychowawca</h3>";
                 $html .= $this->teacher->getHtml();
             }
 

@@ -2,6 +2,25 @@
 		require_once "./classes/Student.php";
 		require_once "./classes/Teacher.php";
 		require_once "./classes/Classroom.php";
+		require_once "./classes/ClassTeacher.php";
+
+		session_start();
+
+		if (!isset($_SESSION['students'])) {
+			$_SESSION['students'] = [
+				new Student("Jan Kowalski", 17, "ZST"),
+				new Student("Anna Kowalska", 16, "ZST")
+			];
+
+			$_SESSION['teachers'] = [
+				new Teacher("Piotr Janicki", 35, "Informatyka"),
+
+			];
+
+			$_SESSION['classTeachers'] = [
+				new ClassTeacher("Piotr Janicki", 35, "Informatyka", "3A"),
+			];
+		}
 
 		$student1 = new Student("Jan", 18, "ZSK");
 		$student2 = new Student("Anna", 20, "ZSŁ");
@@ -11,10 +30,15 @@
 		$classroom->addStudent($student1);
 		$classroom->addStudent($student2);
 
-		$teacher = new Teacher("Ewa", 25, "WF");
-		$classroom->setTeacher($teacher);
+		$teacher1 = new Teacher("Jan", 32, "Matematyka");
+		$classTeacher = new ClassTeacher("Ewa", 25, "WF", "13A");
+		$classroom->setTeacher($classTeacher);
+
+
+
 
 		echo "<h1>Klasa".$classroom->getHTML()."</h1>";
+		// echo "\n<h1>Wychowawca klasy: ".$classTeacher->getInfo()."</h1>";
 
 		// obsługa formularza ze studentem
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -23,7 +47,9 @@
 				$age = $_POST["age"];
 				$school = $_POST["school"];
 
-				$newStudent = new Student($name, $age, $school);
+				// $newStudent = new Student($name, $age, $school);
+
+				$_SESSION['students'][] = new Student($name, $age, $school);
 			}
 
 			if ($_POST["form_type"] == "teacher") {
@@ -31,7 +57,7 @@
 				$age = $_POST["age"];
 				$subject = $_POST["subject"];
 
-				$newTeacher = new Teacher($name, $age, $subject);
+				$_SESSION['teachers'][] = new Teacher($name, $age, $subject);
 			}
 		}
 
@@ -120,6 +146,9 @@
 
     echo "<h2>Informacje o nauczycielach</h2>";
     echo $teacher1->getInfo()."<hr>";
+
+    echo "<h2>Wychowawca</h2>";
+    echo $classTeacher->getInfo()."<hr>";
   ?>
 
   <h2>Informacje HTML - HEREDOC</h2>
