@@ -22,24 +22,6 @@
 			];
 		}
 
-		$student1 = new Student("Jan", 18, "ZSK");
-		$student2 = new Student("Anna", 20, "ZSŁ");
-
-		$classroom = new Classroom("13A");
-
-		$classroom->addStudent($student1);
-		$classroom->addStudent($student2);
-
-		$teacher1 = new Teacher("Jan", 32, "Matematyka");
-		$classTeacher = new ClassTeacher("Ewa", 25, "WF", "13A");
-		$classroom->setTeacher($classTeacher);
-
-
-
-
-		echo "<h1>Klasa".$classroom->getHTML()."</h1>";
-		// echo "\n<h1>Wychowawca klasy: ".$classTeacher->getInfo()."</h1>";
-
 		// obsługa formularza ze studentem
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			if ($_POST["form_type"] == "student") {
@@ -59,7 +41,26 @@
 
 				$_SESSION['teachers'][] = new Teacher($name, $age, $subject);
 			}
+
+			header("Location: " . $_SERVER["PHP_SELF"]);
+			exit;
 		}
+
+		$classroom = new Classroom("13A");
+
+		foreach ($_SESSION['students'] as $student) {
+			$classroom->addStudent($student);
+		}
+
+		$teacher1 = new Teacher("Jan", 32, "Matematyka");
+		$classTeacher = new ClassTeacher("Ewa", 25, "WF", "13A");
+		$classroom->setTeacher($classTeacher);
+
+
+
+
+		echo "<h1>Klasa".$classroom->getHTML()."</h1>";
+		// echo "\n<h1>Wychowawca klasy: ".$classTeacher->getInfo()."</h1>";
 
 //	dodanie nauczyciela
 	$teacher1 = new Teacher("Jan", 18, "ZSK");
@@ -124,17 +125,16 @@
   <h2>Informacje o uczniach</h2>
 
   <?php
-    echo $student1->getInfo()."<br>".$student2->getInfo()."<hr>";
+    foreach ($_SESSION['students'] as $student) {
+      echo $student->getInfo()."<br>";
+    }
+    echo "<hr>";
   ?>
 
 		<h2>Informacje HTML - HEREDOC</h2>
   <?php
-	  echo $student1->getHtml();
-  echo $student2->getHtml();
-
-	if (isset($newStudent)) {
-		echo "<h3>Dodany student:<br>";
-		echo $newStudent->getHtml();
+	foreach ($_SESSION['students'] as $student) {
+		echo $student->getHtml();
 	}
 
 	echo "<h3>Nauczyciel:</h3>".$teacher1->getHtml();
