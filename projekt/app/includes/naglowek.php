@@ -26,9 +26,11 @@ require_once __DIR__ . "/auth.php";
 				}
 				if ($_SESSION["rola"] == "nauczyciel") {
 					echo "<a href=\"panel_nauczyciela.php\">Panel nauczyciela</a>";
+					echo "<a href=\"historia.php\">Historia ocen</a>";
 				}
 				if ($_SESSION["rola"] == "uczen") {
 					echo "<a href=\"moje_oceny.php\">Moje oceny</a>";
+					echo "<a href=\"historia.php\">Historia ocen</a>";
 				}
 				echo "<a href=\"wyloguj.php\">Wyloguj (" . htmlspecialchars($_SESSION["imie"]) . ")</a>";
 			} else {

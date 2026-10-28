@@ -76,7 +76,10 @@ $tytul = "Oceny - " . $przedmiot["nazwa"];
 include "includes/naglowek.php";
 ?>
 		<h2><?php echo htmlspecialchars($przedmiot["nazwa"]); ?></h2>
-		<p><a href="panel_nauczyciela.php">Wróć do moich przedmiotów</a></p>
+		<p>
+			<a href="panel_nauczyciela.php">Wróć do moich przedmiotów</a> |
+			<a href="historia.php?przedmiot=<?php echo $przedmiot_id; ?>">Historia zmian tego przedmiotu</a>
+		</p>
 
 		<?php
 		if ($blad != "") {
