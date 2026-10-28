@@ -1,6 +1,3 @@
--- Baza danych dziennika lekcyjnego
--- Import w phpMyAdmin: zakładka Import, wybrać ten plik, Wykonaj
-
 CREATE DATABASE IF NOT EXISTS dziennik CHARACTER SET utf8mb4 COLLATE utf8mb4_polish_ci;
 USE dziennik;
 

@@ -1,5 +1,4 @@
 <?php
-// tytuł strony, używany w naglowek.php
 $tytul = "Strona główna";
 include "includes/naglowek.php";
 ?>
