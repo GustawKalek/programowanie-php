@@ -23,6 +23,7 @@ require_once __DIR__ . "/auth.php";
 					echo "<a href=\"nauczyciele.php\">Nauczyciele</a>";
 					echo "<a href=\"uczniowie.php\">Uczniowie</a>";
 					echo "<a href=\"przedmioty.php\">Przedmioty</a>";
+					echo "<a href=\"historia.php\">Historia ocen</a>";
 				}
 				if ($_SESSION["rola"] == "nauczyciel") {
 					echo "<a href=\"panel_nauczyciela.php\">Panel nauczyciela</a>";

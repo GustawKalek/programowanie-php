@@ -11,3 +11,10 @@ function wymagaj_roli($rola) {
 		exit;
 	}
 }
+
+function wymagaj_rol($role) {
+	if (!czy_zalogowany() || !in_array($_SESSION["rola"], $role)) {
+		header("Location: logowanie.php");
+		exit;
+	}
+}

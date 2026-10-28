@@ -40,6 +40,7 @@ include "includes/naglowek.php";
 				<td><?php echo htmlspecialchars($p["imie"] . " " . $p["nazwisko"]); ?></td>
 				<td><?php echo $p["uczniow"]; ?></td>
 				<td>
+					<a href="oceny.php?przedmiot=<?php echo $p["id"]; ?>">Oceny</a>
 					<a href="przedmiot_form.php?id=<?php echo $p["id"]; ?>">Edytuj</a>
 					<form method="post" class="w-linii" onsubmit="return confirm('Na pewno usunąć ten przedmiot?');">
 						<input type="hidden" name="id" value="<?php echo $p["id"]; ?>">

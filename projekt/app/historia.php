@@ -2,13 +2,11 @@
 require_once "includes/auth.php";
 require_once "includes/db.php";
 
-if (!czy_zalogowany() || ($_SESSION["rola"] != "uczen" && $_SESSION["rola"] != "nauczyciel")) {
-	header("Location: logowanie.php");
-	exit;
-}
+wymagaj_rol(["uczen", "nauczyciel", "admin"]);
 
 $id = $_SESSION["user_id"];
-$nauczyciel = $_SESSION["rola"] == "nauczyciel";
+$rola = $_SESSION["rola"];
+$pokaz_ucznia = $rola != "uczen";
 $przedmiot_id = (int)($_GET["przedmiot"] ?? 0);
 
 $sql = "SELECT h.data, h.akcja, h.stara_wartosc, h.nowa_wartosc, p.nazwa, u.imie, u.nazwisko, z.imie AS z_imie, z.nazwisko AS z_nazwisko
@@ -17,15 +15,20 @@ $sql = "SELECT h.data, h.akcja, h.stara_wartosc, h.nowa_wartosc, p.nazwa, u.imie
 	JOIN uzytkownicy u ON u.id = h.uczen_id
 	LEFT JOIN uzytkownicy z ON z.id = h.zmienil_id";
 
-if (!$nauczyciel) {
+if ($rola == "uczen") {
 	$stmt = $db->prepare($sql . " WHERE h.uczen_id = ? ORDER BY h.data DESC, h.id DESC");
 	$stmt->bind_param("i", $id);
-} elseif ($przedmiot_id > 0) {
+} elseif ($rola == "nauczyciel" && $przedmiot_id > 0) {
 	$stmt = $db->prepare($sql . " WHERE p.nauczyciel_id = ? AND p.id = ? ORDER BY h.data DESC, h.id DESC");
 	$stmt->bind_param("ii", $id, $przedmiot_id);
-} else {
+} elseif ($rola == "nauczyciel") {
 	$stmt = $db->prepare($sql . " WHERE p.nauczyciel_id = ? ORDER BY h.data DESC, h.id DESC");
 	$stmt->bind_param("i", $id);
+} elseif ($przedmiot_id > 0) {
+	$stmt = $db->prepare($sql . " WHERE p.id = ? ORDER BY h.data DESC, h.id DESC");
+	$stmt->bind_param("i", $przedmiot_id);
+} else {
+	$stmt = $db->prepare($sql . " ORDER BY h.data DESC, h.id DESC");
 }
 $stmt->execute();
 $historia = $stmt->get_result();
@@ -45,7 +48,7 @@ include "includes/naglowek.php";
 			<tr>
 				<th>Data</th>
 				<th>Przedmiot</th>
-				<?php if ($nauczyciel) { ?>
+				<?php if ($pokaz_ucznia) { ?>
 				<th>Uczeń</th>
 				<?php } ?>
 				<th>Akcja</th>
@@ -57,7 +60,7 @@ include "includes/naglowek.php";
 			<tr>
 				<td><?php echo date("d.m.Y H:i", strtotime($h["data"])); ?></td>
 				<td><?php echo htmlspecialchars($h["nazwa"]); ?></td>
-				<?php if ($nauczyciel) { ?>
+				<?php if ($pokaz_ucznia) { ?>
 				<td><?php echo htmlspecialchars($h["nazwisko"] . " " . $h["imie"]); ?></td>
 				<?php } ?>
 				<td><?php echo $akcje[$h["akcja"]]; ?></td>

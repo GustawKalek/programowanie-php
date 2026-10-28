@@ -1,17 +1,24 @@
 <?php
 require_once "includes/auth.php";
 require_once "includes/db.php";
-wymagaj_roli("nauczyciel");
+wymagaj_rol(["nauczyciel", "admin"]);
 
-$nauczyciel_id = $_SESSION["user_id"];
+$moje_id = $_SESSION["user_id"];
 $id = (int)($_GET["id"] ?? 0);
 
-$stmt = $db->prepare("SELECT o.uczen_id, o.przedmiot_id, o.wartosc, o.opis, u.imie, u.nazwisko, p.nazwa
+$sql = "SELECT o.uczen_id, o.przedmiot_id, o.wartosc, o.opis, u.imie, u.nazwisko, p.nazwa
 	FROM oceny o
 	JOIN uzytkownicy u ON u.id = o.uczen_id
 	JOIN przedmioty p ON p.id = o.przedmiot_id
-	WHERE o.id = ? AND p.nauczyciel_id = ?");
-$stmt->bind_param("ii", $id, $nauczyciel_id);
+	WHERE o.id = ?";
+
+if ($_SESSION["rola"] == "admin") {
+	$stmt = $db->prepare($sql);
+	$stmt->bind_param("i", $id);
+} else {
+	$stmt = $db->prepare($sql . " AND p.nauczyciel_id = ?");
+	$stmt->bind_param("ii", $id, $moje_id);
+}
 $stmt->execute();
 $ocena = $stmt->get_result()->fetch_assoc();
 $stmt->close();
@@ -32,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$stmt->close();
 
 		$stmt = $db->prepare("INSERT INTO oceny_historia (ocena_id, uczen_id, przedmiot_id, akcja, stara_wartosc, zmienil_id) VALUES (?, ?, ?, 'usuniecie', ?, ?)");
-		$stmt->bind_param("iiisi", $id, $ocena["uczen_id"], $ocena["przedmiot_id"], $ocena["wartosc"], $nauczyciel_id);
+		$stmt->bind_param("iiisi", $id, $ocena["uczen_id"], $ocena["przedmiot_id"], $ocena["wartosc"], $moje_id);
 		$stmt->execute();
 		$stmt->close();
 
@@ -55,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 		if ($wartosc != $ocena["wartosc"]) {
 			$stmt = $db->prepare("INSERT INTO oceny_historia (ocena_id, uczen_id, przedmiot_id, akcja, stara_wartosc, nowa_wartosc, zmienil_id) VALUES (?, ?, ?, 'zmiana', ?, ?, ?)");
-			$stmt->bind_param("iiissi", $id, $ocena["uczen_id"], $ocena["przedmiot_id"], $ocena["wartosc"], $wartosc, $nauczyciel_id);
+			$stmt->bind_param("iiissi", $id, $ocena["uczen_id"], $ocena["przedmiot_id"], $ocena["wartosc"], $wartosc, $moje_id);
 			$stmt->execute();
 			$stmt->close();
 		}

@@ -1,13 +1,18 @@
 <?php
 require_once "includes/auth.php";
 require_once "includes/db.php";
-wymagaj_roli("nauczyciel");
+wymagaj_rol(["nauczyciel", "admin"]);
 
-$nauczyciel_id = $_SESSION["user_id"];
+$moje_id = $_SESSION["user_id"];
 $przedmiot_id = (int)($_GET["przedmiot"] ?? 0);
 
-$stmt = $db->prepare("SELECT nazwa FROM przedmioty WHERE id = ? AND nauczyciel_id = ?");
-$stmt->bind_param("ii", $przedmiot_id, $nauczyciel_id);
+if ($_SESSION["rola"] == "admin") {
+	$stmt = $db->prepare("SELECT nazwa FROM przedmioty WHERE id = ?");
+	$stmt->bind_param("i", $przedmiot_id);
+} else {
+	$stmt = $db->prepare("SELECT nazwa FROM przedmioty WHERE id = ? AND nauczyciel_id = ?");
+	$stmt->bind_param("ii", $przedmiot_id, $moje_id);
+}
 $stmt->execute();
 $przedmiot = $stmt->get_result()->fetch_assoc();
 $stmt->close();
@@ -38,13 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	if ($blad == "") {
 		$stmt = $db->prepare("INSERT INTO oceny (uczen_id, przedmiot_id, nauczyciel_id, wartosc, opis) VALUES (?, ?, ?, ?, ?)");
-		$stmt->bind_param("iiiss", $uczen_id, $przedmiot_id, $nauczyciel_id, $wartosc, $opis);
+		$stmt->bind_param("iiiss", $uczen_id, $przedmiot_id, $moje_id, $wartosc, $opis);
 		$stmt->execute();
 		$ocena_id = $stmt->insert_id;
 		$stmt->close();
 
 		$stmt = $db->prepare("INSERT INTO oceny_historia (ocena_id, uczen_id, przedmiot_id, akcja, nowa_wartosc, zmienil_id) VALUES (?, ?, ?, 'dodanie', ?, ?)");
-		$stmt->bind_param("iiisi", $ocena_id, $uczen_id, $przedmiot_id, $wartosc, $nauczyciel_id);
+		$stmt->bind_param("iiisi", $ocena_id, $uczen_id, $przedmiot_id, $wartosc, $moje_id);
 		$stmt->execute();
 		$stmt->close();
 
@@ -77,7 +82,11 @@ include "includes/naglowek.php";
 ?>
 		<h2><?php echo htmlspecialchars($przedmiot["nazwa"]); ?></h2>
 		<p>
+			<?php if ($_SESSION["rola"] == "admin") { ?>
+			<a href="przedmioty.php">Wróć do przedmiotów</a> |
+			<?php } else { ?>
 			<a href="panel_nauczyciela.php">Wróć do moich przedmiotów</a> |
+			<?php } ?>
 			<a href="historia.php?przedmiot=<?php echo $przedmiot_id; ?>">Historia zmian tego przedmiotu</a>
 		</p>
 
