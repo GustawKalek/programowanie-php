@@ -1,0 +1,15 @@
+-- Baza danych dziennika lekcyjnego
+-- Import w phpMyAdmin: zakładka Import, wybrać ten plik, Wykonaj
+
+CREATE DATABASE IF NOT EXISTS dziennik CHARACTER SET utf8mb4 COLLATE utf8mb4_polish_ci;
+USE dziennik;
+
+CREATE TABLE IF NOT EXISTS uzytkownicy (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  imie VARCHAR(50) NOT NULL,
+  nazwisko VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  haslo_hash VARCHAR(255) NOT NULL,
+  rola ENUM('uczen', 'nauczyciel', 'admin') NOT NULL DEFAULT 'uczen',
+  utworzono DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

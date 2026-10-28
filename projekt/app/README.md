@@ -15,5 +15,7 @@ Grupa: Szymon Jabłoński, Gustaw Kałek, Marcel Sierocki
 
 1. Sklonować repozytorium do folderu `C:\xampp\htdocs\dziennik`:
    `git clone https://github.com/GustawKalek/programowanie-php.git`
-2. W XAMPP Control Panel uruchomić Apache.
-3. Otworzyć w przeglądarce: http://localhost/dziennik/programowanie-php/projekt/app
+2. W XAMPP Control Panel uruchomić Apache i MySQL.
+3. W phpMyAdmin (http://localhost/phpmyadmin) zaimportować plik `sql/schema.sql`.
+4. Skopiować `includes/config.example.php` jako `includes/config.php` i w razie potrzeby zmienić dane do bazy.
+5. Otworzyć w przeglądarce: http://localhost/dziennik/programowanie-php/projekt/app
