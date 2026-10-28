@@ -10,6 +10,7 @@ $imie = "";
 $nazwisko = "";
 $email = "";
 $klasa = "";
+$wybrane = [];
 
 if ($id > 0 && $_SERVER["REQUEST_METHOD"] != "POST") {
 	$stmt = $db->prepare("SELECT imie, nazwisko, email, klasa FROM uzytkownicy WHERE id = ? AND rola = 'uczen'");
@@ -25,6 +26,15 @@ if ($id > 0 && $_SERVER["REQUEST_METHOD"] != "POST") {
 	$nazwisko = $u["nazwisko"];
 	$email = $u["email"];
 	$klasa = $u["klasa"];
+
+	$stmt = $db->prepare("SELECT przedmiot_id FROM uczniowie_przedmioty WHERE uczen_id = ?");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$wynik = $stmt->get_result();
+	while ($w = $wynik->fetch_assoc()) {
+		$wybrane[] = $w["przedmiot_id"];
+	}
+	$stmt->close();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -33,6 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$email = trim($_POST["email"] ?? "");
 	$klasa = trim($_POST["klasa"] ?? "");
 	$haslo = $_POST["haslo"] ?? "";
+
+	foreach ($_POST["przedmioty"] ?? [] as $p) {
+		$wybrane[] = (int)$p;
+	}
 
 	if ($imie == "" || $nazwisko == "" || $email == "" || $klasa == "") {
 		$bledy[] = "Wypełnij imię, nazwisko, e-mail i klasę.";
@@ -69,12 +83,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$stmt->bind_param("ssssi", $imie, $nazwisko, $email, $klasa, $id);
 		}
 		$stmt->execute();
+		if ($id == 0) {
+			$id = $stmt->insert_id;
+		}
+		$stmt->close();
+
+		$stmt = $db->prepare("DELETE FROM uczniowie_przedmioty WHERE uczen_id = ?");
+		$stmt->bind_param("i", $id);
+		$stmt->execute();
+		$stmt->close();
+
+		$stmt = $db->prepare("INSERT INTO uczniowie_przedmioty (uczen_id, przedmiot_id) VALUES (?, ?)");
+		foreach ($wybrane as $przedmiot_id) {
+			$stmt->bind_param("ii", $id, $przedmiot_id);
+			$stmt->execute();
+		}
 		$stmt->close();
 
 		header("Location: uczniowie.php");
 		exit;
 	}
 }
+
+$przedmioty = $db->query("SELECT id, nazwa FROM przedmioty ORDER BY nazwa");
 
 if ($id > 0) {
 	$tytul = "Edycja ucznia";
@@ -103,6 +134,18 @@ include "includes/naglowek.php";
 			<p>
 				<label for="klasa">Klasa:</label><br>
 				<input type="text" name="klasa" id="klasa" value="<?php echo htmlspecialchars($klasa); ?>" maxlength="10" placeholder="np. 2A" required>
+			</p>
+			<p>
+				Przedmioty:<br>
+				<?php
+				while ($p = $przedmioty->fetch_assoc()) {
+					$zaznacz = "";
+					if (in_array($p["id"], $wybrane)) {
+						$zaznacz = " checked";
+					}
+					echo "<label><input type=\"checkbox\" name=\"przedmioty[]\" value=\"" . $p["id"] . "\"" . $zaznacz . "> " . htmlspecialchars($p["nazwa"]) . "</label><br>";
+				}
+				?>
 			</p>
 			<p>
 				<label for="email">E-mail (login):</label><br>

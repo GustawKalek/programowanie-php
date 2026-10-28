@@ -14,5 +14,15 @@ CREATE TABLE IF NOT EXISTS uzytkownicy (
 
 CREATE TABLE IF NOT EXISTS przedmioty (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  nazwa VARCHAR(50) NOT NULL UNIQUE
+  nazwa VARCHAR(50) NOT NULL UNIQUE,
+  nauczyciel_id INT NULL,
+  FOREIGN KEY (nauczyciel_id) REFERENCES uzytkownicy(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS uczniowie_przedmioty (
+  uczen_id INT NOT NULL,
+  przedmiot_id INT NOT NULL,
+  PRIMARY KEY (uczen_id, przedmiot_id),
+  FOREIGN KEY (uczen_id) REFERENCES uzytkownicy(id) ON DELETE CASCADE,
+  FOREIGN KEY (przedmiot_id) REFERENCES przedmioty(id) ON DELETE CASCADE
 );

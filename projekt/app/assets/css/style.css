@@ -47,6 +47,10 @@ form input {
   width: 250px;
 }
 
+form input[type="checkbox"] {
+  width: auto;
+}
+
 table {
   border-collapse: collapse;
 }

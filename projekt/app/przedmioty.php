@@ -15,7 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	exit;
 }
 
-$wynik = $db->query("SELECT id, nazwa FROM przedmioty ORDER BY nazwa");
+$wynik = $db->query("SELECT p.id, p.nazwa, n.imie, n.nazwisko,
+	(SELECT COUNT(*) FROM uczniowie_przedmioty WHERE przedmiot_id = p.id) AS uczniow
+	FROM przedmioty p
+	LEFT JOIN uzytkownicy n ON n.id = p.nauczyciel_id
+	ORDER BY p.nazwa");
 
 $tytul = "Przedmioty";
 include "includes/naglowek.php";
@@ -26,11 +30,15 @@ include "includes/naglowek.php";
 		<table>
 			<tr>
 				<th>Nazwa</th>
+				<th>Nauczyciel</th>
+				<th>Uczniów</th>
 				<th></th>
 			</tr>
 			<?php while ($p = $wynik->fetch_assoc()) { ?>
 			<tr>
 				<td><?php echo htmlspecialchars($p["nazwa"]); ?></td>
+				<td><?php echo htmlspecialchars($p["imie"] . " " . $p["nazwisko"]); ?></td>
+				<td><?php echo $p["uczniow"]; ?></td>
 				<td>
 					<a href="przedmiot_form.php?id=<?php echo $p["id"]; ?>">Edytuj</a>
 					<form method="post" class="w-linii" onsubmit="return confirm('Na pewno usunąć ten przedmiot?');">

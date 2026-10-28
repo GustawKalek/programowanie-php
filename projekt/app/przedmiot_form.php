@@ -7,9 +7,10 @@ $id = (int)($_GET["id"] ?? 0);
 
 $bledy = [];
 $nazwa = "";
+$nauczyciel_id = 0;
 
 if ($id > 0 && $_SERVER["REQUEST_METHOD"] != "POST") {
-	$stmt = $db->prepare("SELECT nazwa FROM przedmioty WHERE id = ?");
+	$stmt = $db->prepare("SELECT nazwa, nauczyciel_id FROM przedmioty WHERE id = ?");
 	$stmt->bind_param("i", $id);
 	$stmt->execute();
 	$p = $stmt->get_result()->fetch_assoc();
@@ -19,10 +20,12 @@ if ($id > 0 && $_SERVER["REQUEST_METHOD"] != "POST") {
 		die("Nie ma takiego przedmiotu.");
 	}
 	$nazwa = $p["nazwa"];
+	$nauczyciel_id = (int)$p["nauczyciel_id"];
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$nazwa = trim($_POST["nazwa"] ?? "");
+	$nauczyciel_id = (int)($_POST["nauczyciel_id"] ?? 0);
 
 	if ($nazwa == "") {
 		$bledy[] = "Podaj nazwę przedmiotu.";
@@ -40,12 +43,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
-		if ($id == 0) {
-			$stmt = $db->prepare("INSERT INTO przedmioty (nazwa) VALUES (?)");
-			$stmt->bind_param("s", $nazwa);
+		if ($nauczyciel_id > 0) {
+			$nauczyciel = $nauczyciel_id;
 		} else {
-			$stmt = $db->prepare("UPDATE przedmioty SET nazwa = ? WHERE id = ?");
-			$stmt->bind_param("si", $nazwa, $id);
+			$nauczyciel = null;
+		}
+
+		if ($id == 0) {
+			$stmt = $db->prepare("INSERT INTO przedmioty (nazwa, nauczyciel_id) VALUES (?, ?)");
+			$stmt->bind_param("si", $nazwa, $nauczyciel);
+		} else {
+			$stmt = $db->prepare("UPDATE przedmioty SET nazwa = ?, nauczyciel_id = ? WHERE id = ?");
+			$stmt->bind_param("sii", $nazwa, $nauczyciel, $id);
 		}
 		$stmt->execute();
 		$stmt->close();
@@ -54,6 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		exit;
 	}
 }
+
+$nauczyciele = $db->query("SELECT id, imie, nazwisko FROM uzytkownicy WHERE rola = 'nauczyciel' ORDER BY nazwisko, imie");
 
 if ($id > 0) {
 	$tytul = "Edycja przedmiotu";
@@ -74,6 +85,21 @@ include "includes/naglowek.php";
 			<p>
 				<label for="nazwa">Nazwa:</label><br>
 				<input type="text" name="nazwa" id="nazwa" value="<?php echo htmlspecialchars($nazwa); ?>" maxlength="50" required>
+			</p>
+			<p>
+				<label for="nauczyciel_id">Nauczyciel:</label><br>
+				<select name="nauczyciel_id" id="nauczyciel_id">
+					<option value="0">(brak)</option>
+					<?php
+					while ($n = $nauczyciele->fetch_assoc()) {
+						$zaznacz = "";
+						if ($n["id"] == $nauczyciel_id) {
+							$zaznacz = " selected";
+						}
+						echo "<option value=\"" . $n["id"] . "\"" . $zaznacz . ">" . htmlspecialchars($n["nazwisko"] . " " . $n["imie"]) . "</option>";
+					}
+					?>
+				</select>
 			</p>
 			<button type="submit">Zapisz</button>
 			<a href="przedmioty.php">Anuluj</a>
