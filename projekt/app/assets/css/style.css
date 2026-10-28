@@ -38,6 +38,29 @@ main h2 {
   color: #2c4f7c;
 }
 
+.blad {
+  color: #b00020;
+}
+
+form input {
+  padding: 5px;
+  width: 250px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.w-linii {
+  display: inline;
+}
+
 footer {
   text-align: center;
   color: #666;

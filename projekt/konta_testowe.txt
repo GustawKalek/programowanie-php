@@ -1,0 +1,19 @@
+Konta testowe - Dziennik lekcyjny
+Logowanie: http://localhost/dziennik/programowanie-php/projekt/app/logowanie.php
+
+ADMINISTRATOR
+login: admin
+hasło: admin
+
+NAUCZYCIELE
+Imię i nazwisko         Login                             Hasło
+Anna Nowak              anna.nowak@zst.test               Rower847
+Piotr Wiśniewski        piotr.wisniewski@zst.test         Most334
+Katarzyna Wójcik        katarzyna.wojcik@zst.test         Lampa369
+Tomasz Kamiński         tomasz.kaminski@zst.test          Zegar604
+Magdalena Lewandowska   magdalena.lewandowska@zst.test    Lato602
+Marek Zieliński         marek.zielinski@zst.test          Zeszyt588
+Agnieszka Szymańska     agnieszka.szymanska@zst.test      Okno697
+Paweł Woźniak           pawel.wozniak@zst.test            Kreda618
+Ewa Dąbrowska           ewa.dabrowska@zst.test            Plecak712
+Krzysztof Kozłowski     krzysztof.kozlowski@zst.test      Kwiat314
