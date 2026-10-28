@@ -98,14 +98,19 @@ include "includes/naglowek.php";
 
 		<table>
 			<tr>
-				<th>Klasa</th>
 				<th>Uczeń</th>
 				<th>Oceny</th>
 				<th>Nowa ocena</th>
 			</tr>
-			<?php while ($u = $uczniowie->fetch_assoc()) { ?>
+			<?php
+			$poprzednia_klasa = "";
+			while ($u = $uczniowie->fetch_assoc()) {
+				if ($u["klasa"] != $poprzednia_klasa) {
+					echo "<tr class=\"klasa\"><th colspan=\"3\">Klasa " . htmlspecialchars($u["klasa"]) . "</th></tr>";
+					$poprzednia_klasa = $u["klasa"];
+				}
+			?>
 			<tr>
-				<td><?php echo htmlspecialchars($u["klasa"]); ?></td>
 				<td><?php echo htmlspecialchars($u["nazwisko"] . " " . $u["imie"]); ?></td>
 				<td>
 					<?php

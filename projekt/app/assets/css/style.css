@@ -42,13 +42,28 @@ main h2 {
   color: #b00020;
 }
 
-form input {
+form input, form select {
   padding: 5px;
   width: 250px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
 }
 
 form input[type="checkbox"] {
   width: auto;
+}
+
+button {
+  background: #2c4f7c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1f3a5c;
 }
 
 table {
@@ -61,6 +76,19 @@ th, td {
   text-align: left;
 }
 
+th {
+  background: #e8eef6;
+}
+
+tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+.klasa th {
+  background: #2c4f7c;
+  color: white;
+}
+
 .w-linii {
   display: inline;
 }
@@ -70,8 +98,40 @@ td input {
 }
 
 .ocena {
-  font-weight: bold;
+  display: inline-block;
+  min-width: 18px;
+  padding: 2px 6px;
   margin-right: 4px;
+  border-radius: 4px;
+  background: #e8eef6;
+  color: #2c4f7c;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+
+a.ocena:hover {
+  background: #2c4f7c;
+  color: white;
+}
+
+.kafelki {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.kafelek {
+  width: 220px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9fbfd;
+}
+
+.kafelek h3 {
+  margin: 0 0 10px 0;
+  color: #2c4f7c;
 }
 
 footer {

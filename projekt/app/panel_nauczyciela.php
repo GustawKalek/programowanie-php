@@ -5,7 +5,12 @@ wymagaj_roli("nauczyciel");
 
 $nauczyciel_id = $_SESSION["user_id"];
 
-$stmt = $db->prepare("SELECT id, nazwa FROM przedmioty WHERE nauczyciel_id = ? ORDER BY nazwa");
+$stmt = $db->prepare("SELECT p.id, p.nazwa,
+	(SELECT COUNT(*) FROM uczniowie_przedmioty WHERE przedmiot_id = p.id) AS uczniow,
+	(SELECT COUNT(*) FROM oceny WHERE przedmiot_id = p.id) AS ocen
+	FROM przedmioty p
+	WHERE p.nauczyciel_id = ?
+	ORDER BY p.nazwa");
 $stmt->bind_param("i", $nauczyciel_id);
 $stmt->execute();
 $przedmioty = $stmt->get_result();
@@ -22,11 +27,16 @@ include "includes/naglowek.php";
 		if ($przedmioty->num_rows == 0) {
 			echo "<p>Nie masz przypisanych przedmiotów.</p>";
 		} else {
-			echo "<ul>";
+			echo "<div class=\"kafelki\">";
 			while ($p = $przedmioty->fetch_assoc()) {
-				echo "<li><a href=\"oceny.php?przedmiot=" . $p["id"] . "\">" . htmlspecialchars($p["nazwa"]) . "</a></li>";
+				echo "<div class=\"kafelek\">";
+				echo "<h3>" . htmlspecialchars($p["nazwa"]) . "</h3>";
+				echo "<p>Uczniów: " . $p["uczniow"] . "<br>Ocen: " . $p["ocen"] . "</p>";
+				echo "<a href=\"oceny.php?przedmiot=" . $p["id"] . "\">Oceny</a> | ";
+				echo "<a href=\"historia.php?przedmiot=" . $p["id"] . "\">Historia</a>";
+				echo "</div>";
 			}
-			echo "</ul>";
+			echo "</div>";
 		}
 		?>
 <?php include "includes/stopka.php"; ?>
