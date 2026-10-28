@@ -21,6 +21,7 @@ require_once __DIR__ . "/auth.php";
 			if (czy_zalogowany()) {
 				if ($_SESSION["rola"] == "admin") {
 					echo "<a href=\"nauczyciele.php\">Nauczyciele</a>";
+					echo "<a href=\"uczniowie.php\">Uczniowie</a>";
 				}
 				if ($_SESSION["rola"] == "nauczyciel") {
 					echo "<a href=\"panel_nauczyciela.php\">Panel nauczyciela</a>";

@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS uzytkownicy (
   email VARCHAR(100) NOT NULL UNIQUE,
   haslo_hash VARCHAR(255) NOT NULL,
   rola ENUM('uczen', 'nauczyciel', 'admin') NOT NULL DEFAULT 'uczen',
+  klasa VARCHAR(10) NULL,
   utworzono DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
