@@ -1,0 +1,5 @@
+# dane do bazy, każdy ma swoje
+includes/config.php
+
+# logi
+logs/
