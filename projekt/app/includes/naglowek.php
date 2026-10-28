@@ -1,5 +1,13 @@
 <?php
 require_once __DIR__ . "/auth.php";
+
+function link_menu($plik, $tekst) {
+	$klasa = "";
+	if (basename($_SERVER["SCRIPT_NAME"]) == $plik) {
+		$klasa = " class=\"aktywny\"";
+	}
+	echo "<a href=\"" . $plik . "\"" . $klasa . ">" . $tekst . "</a>";
+}
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -13,29 +21,30 @@ require_once __DIR__ . "/auth.php";
 	<header>
 		<h1>Dziennik lekcyjny</h1>
 		<nav>
-			<a href="index.php">Strona główna</a>
-			<a href="o-szkole.php">O szkole</a>
-			<a href="kontakt.php">Kontakt</a>
-			<a href="regulamin.php">Regulamin</a>
 			<?php
+			link_menu("index.php", "Strona główna");
+			link_menu("o-szkole.php", "O szkole");
+			link_menu("kontakt.php", "Kontakt");
+			link_menu("regulamin.php", "Regulamin");
+
 			if (czy_zalogowany()) {
 				if ($_SESSION["rola"] == "admin") {
-					echo "<a href=\"nauczyciele.php\">Nauczyciele</a>";
-					echo "<a href=\"uczniowie.php\">Uczniowie</a>";
-					echo "<a href=\"przedmioty.php\">Przedmioty</a>";
-					echo "<a href=\"historia.php\">Historia ocen</a>";
+					link_menu("nauczyciele.php", "Nauczyciele");
+					link_menu("uczniowie.php", "Uczniowie");
+					link_menu("przedmioty.php", "Przedmioty");
+					link_menu("historia.php", "Historia ocen");
 				}
 				if ($_SESSION["rola"] == "nauczyciel") {
-					echo "<a href=\"panel_nauczyciela.php\">Panel nauczyciela</a>";
-					echo "<a href=\"historia.php\">Historia ocen</a>";
+					link_menu("panel_nauczyciela.php", "Panel nauczyciela");
+					link_menu("historia.php", "Historia ocen");
 				}
 				if ($_SESSION["rola"] == "uczen") {
-					echo "<a href=\"moje_oceny.php\">Moje oceny</a>";
-					echo "<a href=\"historia.php\">Historia ocen</a>";
+					link_menu("moje_oceny.php", "Moje oceny");
+					link_menu("historia.php", "Historia ocen");
 				}
-				echo "<a href=\"wyloguj.php\">Wyloguj (" . htmlspecialchars($_SESSION["imie"]) . ")</a>";
+				link_menu("wyloguj.php", "Wyloguj (" . htmlspecialchars($_SESSION["imie"]) . ")");
 			} else {
-				echo "<a href=\"logowanie.php\">Logowanie</a>";
+				link_menu("logowanie.php", "Logowanie");
 			}
 			?>
 		</nav>

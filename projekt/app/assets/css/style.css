@@ -16,14 +16,28 @@ header h1 {
   font-size: 24px;
 }
 
-nav a {
-  color: white;
-  margin-right: 15px;
-  text-decoration: none;
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0 -10px;
 }
 
-nav a:hover {
-  text-decoration: underline;
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+nav a:hover,
+nav a.aktywny {
+  background: #1f3a5c;
+}
+
+nav a:last-child {
+  margin-left: auto;
 }
 
 main {
