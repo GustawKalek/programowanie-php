@@ -26,3 +26,31 @@ CREATE TABLE IF NOT EXISTS uczniowie_przedmioty (
   FOREIGN KEY (uczen_id) REFERENCES uzytkownicy(id) ON DELETE CASCADE,
   FOREIGN KEY (przedmiot_id) REFERENCES przedmioty(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS oceny (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  uczen_id INT NOT NULL,
+  przedmiot_id INT NOT NULL,
+  nauczyciel_id INT NULL,
+  wartosc VARCHAR(2) NOT NULL,
+  opis VARCHAR(100) NULL,
+  data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (uczen_id) REFERENCES uzytkownicy(id) ON DELETE CASCADE,
+  FOREIGN KEY (przedmiot_id) REFERENCES przedmioty(id) ON DELETE CASCADE,
+  FOREIGN KEY (nauczyciel_id) REFERENCES uzytkownicy(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS oceny_historia (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ocena_id INT NOT NULL,
+  uczen_id INT NOT NULL,
+  przedmiot_id INT NOT NULL,
+  akcja ENUM('dodanie', 'zmiana', 'usuniecie') NOT NULL,
+  stara_wartosc VARCHAR(2) NULL,
+  nowa_wartosc VARCHAR(2) NULL,
+  zmienil_id INT NULL,
+  data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (uczen_id) REFERENCES uzytkownicy(id) ON DELETE CASCADE,
+  FOREIGN KEY (przedmiot_id) REFERENCES przedmioty(id) ON DELETE CASCADE,
+  FOREIGN KEY (zmienil_id) REFERENCES uzytkownicy(id) ON DELETE SET NULL
+);
