@@ -13,3 +13,15 @@ INSERT IGNORE INTO uzytkownicy (imie, nazwisko, email, haslo_hash, rola) VALUES
 ('Paweł', 'Woźniak', 'pawel.wozniak@zst.test', '$2y$10$Bktjf5FOFJdbEJ42Z1cGf.hhl4btT7z6FhP33LrLs6Nw4XuWnOvFO', 'nauczyciel'),
 ('Ewa', 'Dąbrowska', 'ewa.dabrowska@zst.test', '$2y$10$UzBdoLSBC.kdanQjvI2FWOJBFBdNN6rmPHzTr81BWP0feCA7WiJ7G', 'nauczyciel'),
 ('Krzysztof', 'Kozłowski', 'krzysztof.kozlowski@zst.test', '$2y$10$cdiXha94oLlCyM.ish8cHuDvRK7zG3NsqMyaIH9biw.FxA5WVbSb6', 'nauczyciel');
+
+INSERT IGNORE INTO przedmioty (nazwa) VALUES
+('Matematyka'),
+('Język polski'),
+('Język angielski'),
+('Historia'),
+('Fizyka'),
+('Chemia'),
+('Biologia'),
+('Geografia'),
+('Informatyka'),
+('Wychowanie fizyczne');
