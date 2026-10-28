@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		} elseif ($uzytkownik["rola"] == "nauczyciel") {
 			header("Location: panel_nauczyciela.php");
 		} else {
-			header("Location: index.php");
+			header("Location: moje_oceny.php");
 		}
 		exit;
 	} else {

@@ -63,7 +63,7 @@ $uczniowie = $stmt->get_result();
 $stmt->close();
 
 $oceny = [];
-$stmt = $db->prepare("SELECT uczen_id, wartosc, opis FROM oceny WHERE przedmiot_id = ? ORDER BY data");
+$stmt = $db->prepare("SELECT id, uczen_id, wartosc, opis FROM oceny WHERE przedmiot_id = ? ORDER BY data");
 $stmt->bind_param("i", $przedmiot_id);
 $stmt->execute();
 $wynik = $stmt->get_result();
@@ -98,7 +98,7 @@ include "includes/naglowek.php";
 				<td>
 					<?php
 					foreach ($oceny[$u["id"]] ?? [] as $o) {
-						echo "<span class=\"ocena\" title=\"" . htmlspecialchars($o["opis"]) . "\">" . htmlspecialchars($o["wartosc"]) . "</span> ";
+						echo "<a class=\"ocena\" href=\"ocena_form.php?id=" . $o["id"] . "\" title=\"" . htmlspecialchars($o["opis"]) . "\">" . htmlspecialchars($o["wartosc"]) . "</a> ";
 					}
 					?>
 				</td>
