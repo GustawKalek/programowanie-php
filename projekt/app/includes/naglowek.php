@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/auth.php";
 
+// link w menu, aktualna strona dostaje klasę aktywny
 function link_menu($plik, $tekst) {
 	$klasa = "";
 	if (basename($_SERVER["SCRIPT_NAME"]) == $plik) {
@@ -27,6 +28,7 @@ function link_menu($plik, $tekst) {
 			link_menu("kontakt.php", "Kontakt");
 			link_menu("regulamin.php", "Regulamin");
 
+			// dalsza część menu zależy od roli
 			if (czy_zalogowany()) {
 				if ($_SESSION["rola"] == "admin") {
 					link_menu("nauczyciele.php", "Nauczyciele");

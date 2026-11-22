@@ -10,6 +10,7 @@ $imie = "";
 $nazwisko = "";
 $email = "";
 
+// edycja: wczytanie danych nauczyciela
 if ($id > 0 && $_SERVER["REQUEST_METHOD"] != "POST") {
 	$stmt = $db->prepare("SELECT imie, nazwisko, email FROM uzytkownicy WHERE id = ? AND rola = 'nauczyciel'");
 	$stmt->bind_param("i", $id);
@@ -42,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
+		// sprawdzamy, czy e-mail nie jest zajęty
 		$stmt = $db->prepare("SELECT id FROM uzytkownicy WHERE email = ? AND id != ?");
 		$stmt->bind_param("si", $email, $id);
 		$stmt->execute();
@@ -53,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
+		// puste hasło przy edycji = hasło bez zmian
 		if ($id == 0) {
 			$hash = password_hash($haslo, PASSWORD_DEFAULT);
 			$stmt = $db->prepare("INSERT INTO uzytkownicy (imie, nazwisko, email, haslo_hash, rola) VALUES (?, ?, ?, ?, 'nauczyciel')");

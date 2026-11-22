@@ -9,6 +9,7 @@ $rola = $_SESSION["rola"];
 $pokaz_ucznia = $rola != "uczen";
 $przedmiot_id = (int)($_GET["przedmiot"] ?? 0);
 
+// wspólna część zapytania, WHERE zależy od roli
 $sql = "SELECT h.data, h.akcja, h.stara_wartosc, h.nowa_wartosc, p.nazwa, u.imie, u.nazwisko, z.imie AS z_imie, z.nazwisko AS z_nazwisko
 	FROM oceny_historia h
 	JOIN przedmioty p ON p.id = h.przedmiot_id
@@ -34,6 +35,7 @@ $stmt->execute();
 $historia = $stmt->get_result();
 $stmt->close();
 
+// nazwy akcji do wyświetlenia
 $akcje = ["dodanie" => "dodanie", "zmiana" => "zmiana", "usuniecie" => "usunięcie"];
 
 $tytul = "Historia ocen";

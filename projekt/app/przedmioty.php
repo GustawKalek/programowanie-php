@@ -3,6 +3,7 @@ require_once "includes/auth.php";
 require_once "includes/db.php";
 wymagaj_roli("admin");
 
+// usuwanie przedmiotu
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$id = (int)$_POST["id"];
 
@@ -15,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	exit;
 }
 
+// LEFT JOIN, bo przedmiot może nie mieć nauczyciela
 $wynik = $db->query("SELECT p.id, p.nazwa, n.imie, n.nazwisko,
 	(SELECT COUNT(*) FROM uczniowie_przedmioty WHERE przedmiot_id = p.id) AS uczniow
 	FROM przedmioty p

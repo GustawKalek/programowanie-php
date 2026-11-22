@@ -12,6 +12,7 @@ $email = "";
 $klasa = "";
 $wybrane = [];
 
+// przy edycji wczytujemy dane ucznia i jego przedmioty
 if ($id > 0 && $_SERVER["REQUEST_METHOD"] != "POST") {
 	$stmt = $db->prepare("SELECT imie, nazwisko, email, klasa FROM uzytkownicy WHERE id = ? AND rola = 'uczen'");
 	$stmt->bind_param("i", $id);
@@ -59,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
+		// e-mail jest loginem, więc nie może się powtarzać
 		$stmt = $db->prepare("SELECT id FROM uzytkownicy WHERE email = ? AND id != ?");
 		$stmt->bind_param("si", $email, $id);
 		$stmt->execute();
@@ -70,6 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
+		// hasło zmienia się tylko wtedy, gdy ktoś wpisze nowe
 		if ($id == 0) {
 			$hash = password_hash($haslo, PASSWORD_DEFAULT);
 			$stmt = $db->prepare("INSERT INTO uzytkownicy (imie, nazwisko, email, haslo_hash, rola, klasa) VALUES (?, ?, ?, ?, 'uczen', ?)");
@@ -88,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		}
 		$stmt->close();
 
+		// przedmioty ucznia zapisujemy od nowa
 		$stmt = $db->prepare("DELETE FROM uczniowie_przedmioty WHERE uczen_id = ?");
 		$stmt->bind_param("i", $id);
 		$stmt->execute();

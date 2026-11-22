@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS dziennik CHARACTER SET utf8mb4 COLLATE utf8mb4_polish_ci;
 USE dziennik;
 
+-- uczniowie, nauczyciele i admin są w jednej tabeli, rozróżnia ich rola
 CREATE TABLE IF NOT EXISTS uzytkownicy (
   id INT AUTO_INCREMENT PRIMARY KEY,
   imie VARCHAR(50) NOT NULL,
@@ -19,6 +20,7 @@ CREATE TABLE IF NOT EXISTS przedmioty (
   FOREIGN KEY (nauczyciel_id) REFERENCES uzytkownicy(id) ON DELETE SET NULL
 );
 
+-- którzy uczniowie chodzą na który przedmiot
 CREATE TABLE IF NOT EXISTS uczniowie_przedmioty (
   uczen_id INT NOT NULL,
   przedmiot_id INT NOT NULL,
@@ -40,6 +42,7 @@ CREATE TABLE IF NOT EXISTS oceny (
   FOREIGN KEY (nauczyciel_id) REFERENCES uzytkownicy(id) ON DELETE SET NULL
 );
 
+-- bez klucza obcego na ocena_id, żeby historia została po usunięciu oceny
 CREATE TABLE IF NOT EXISTS oceny_historia (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ocena_id INT NOT NULL,

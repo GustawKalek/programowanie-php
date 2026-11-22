@@ -3,6 +3,7 @@ require_once "includes/auth.php";
 require_once "includes/db.php";
 wymagaj_roli("admin");
 
+// usuwanie ucznia, jego oceny usuwa baza (ON DELETE CASCADE)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$id = (int)$_POST["id"];
 

@@ -3,6 +3,7 @@ require_once "includes/auth.php";
 require_once "includes/db.php";
 wymagaj_roli("admin");
 
+// usuwanie nauczyciela (przycisk Usuń w tabeli)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$id = (int)$_POST["id"];
 

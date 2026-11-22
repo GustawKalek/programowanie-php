@@ -12,6 +12,7 @@ $sql = "SELECT o.uczen_id, o.przedmiot_id, o.wartosc, o.opis, u.imie, u.nazwisko
 	JOIN przedmioty p ON p.id = o.przedmiot_id
 	WHERE o.id = ?";
 
+// nauczyciel może zmieniać tylko oceny ze swoich przedmiotów
 if ($_SESSION["rola"] == "admin") {
 	$stmt = $db->prepare($sql);
 	$stmt->bind_param("i", $id);
@@ -32,6 +33,7 @@ $wartosc = $ocena["wartosc"];
 $opis = $ocena["opis"];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	// usunięcie oceny, w historii zostaje stara wartość
 	if (isset($_POST["usun"])) {
 		$stmt = $db->prepare("DELETE FROM oceny WHERE id = ?");
 		$stmt->bind_param("i", $id);
@@ -60,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$stmt->execute();
 		$stmt->close();
 
+		// do historii tylko wtedy, gdy zmieniła się sama ocena
 		if ($wartosc != $ocena["wartosc"]) {
 			$stmt = $db->prepare("INSERT INTO oceny_historia (ocena_id, uczen_id, przedmiot_id, akcja, stara_wartosc, nowa_wartosc, zmienil_id) VALUES (?, ?, ?, 'zmiana', ?, ?, ?)");
 			$stmt->bind_param("iiissi", $id, $ocena["uczen_id"], $ocena["przedmiot_id"], $ocena["wartosc"], $wartosc, $moje_id);

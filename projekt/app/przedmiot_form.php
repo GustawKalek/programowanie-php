@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
+		// nazwa przedmiotu nie może się powtarzać
 		$stmt = $db->prepare("SELECT id FROM przedmioty WHERE nazwa = ? AND id != ?");
 		$stmt->bind_param("si", $nazwa, $id);
 		$stmt->execute();
@@ -43,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 
 	if (empty($bledy)) {
+		// 0 na liście to brak nauczyciela, w bazie zapisujemy wtedy NULL
 		if ($nauczyciel_id > 0) {
 			$nauczyciel = $nauczyciel_id;
 		} else {

@@ -5,6 +5,7 @@ wymagaj_roli("uczen");
 
 $uczen_id = $_SESSION["user_id"];
 
+// przedmioty, na które uczeń jest zapisany
 $stmt = $db->prepare("SELECT p.id, p.nazwa, n.imie, n.nazwisko FROM uczniowie_przedmioty up
 	JOIN przedmioty p ON p.id = up.przedmiot_id
 	LEFT JOIN uzytkownicy n ON n.id = p.nauczyciel_id
@@ -15,6 +16,7 @@ $stmt->execute();
 $przedmioty = $stmt->get_result();
 $stmt->close();
 
+// oceny ucznia pogrupowane po przedmiotach
 $oceny = [];
 $stmt = $db->prepare("SELECT przedmiot_id, wartosc, opis, data FROM oceny WHERE uczen_id = ? ORDER BY data");
 $stmt->bind_param("i", $uczen_id);
@@ -44,6 +46,7 @@ include "includes/naglowek.php";
 				<td>
 					<?php
 					foreach ($oceny[$p["id"]] ?? [] as $o) {
+						// opis i data pokazują się po najechaniu na ocenę
 						$opis = $o["opis"] . " (" . date("d.m.Y", strtotime($o["data"])) . ")";
 						echo "<span class=\"ocena\" title=\"" . htmlspecialchars($opis) . "\">" . htmlspecialchars($o["wartosc"]) . "</span> ";
 					}

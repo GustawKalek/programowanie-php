@@ -5,6 +5,7 @@ wymagaj_roli("nauczyciel");
 
 $nauczyciel_id = $_SESSION["user_id"];
 
+// przedmioty nauczyciela z liczbą uczniów i ocen
 $stmt = $db->prepare("SELECT p.id, p.nazwa,
 	(SELECT COUNT(*) FROM uczniowie_przedmioty WHERE przedmiot_id = p.id) AS uczniow,
 	(SELECT COUNT(*) FROM oceny WHERE przedmiot_id = p.id) AS ocen

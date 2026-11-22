@@ -16,6 +16,7 @@ header h1 {
   font-size: 24px;
 }
 
+/* menu */
 nav {
   display: flex;
   flex-wrap: wrap;
@@ -56,6 +57,7 @@ main h2 {
   color: #b00020;
 }
 
+/* formularze */
 form input, form select {
   padding: 5px;
   width: 250px;
@@ -80,6 +82,7 @@ button:hover {
   background: #1f3a5c;
 }
 
+/* tabele */
 table {
   border-collapse: collapse;
 }
@@ -111,6 +114,7 @@ td input {
   width: auto;
 }
 
+/* oceny jako małe plakietki */
 .ocena {
   display: inline-block;
   min-width: 18px;
@@ -129,6 +133,7 @@ a.ocena:hover {
   color: white;
 }
 
+/* kafelki w panelu nauczyciela */
 .kafelki {
   display: flex;
   flex-wrap: wrap;

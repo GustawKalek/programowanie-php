@@ -1,6 +1,7 @@
 SET NAMES utf8mb4;
 USE dziennik;
 
+-- hasła do kont testowych są w projekt/konta_testowe.txt
 INSERT IGNORE INTO uzytkownicy (imie, nazwisko, email, haslo_hash, rola) VALUES
 ('Admin', 'Admin', 'admin', '$2y$10$qHK2nvrPg0ELIFNlAxTYKeaKMAbJInBm8XmUx3eGSSxU6rVr0mS26', 'admin'),
 ('Anna', 'Nowak', 'anna.nowak@zst.test', '$2y$10$6BDUy4ZVF0s5YX9mIZrY1eLQP/2YAxTf/luXJOs1oWbzpGC9CCO.y', 'nauczyciel'),

@@ -6,6 +6,7 @@ wymagaj_rol(["nauczyciel", "admin"]);
 $moje_id = $_SESSION["user_id"];
 $przedmiot_id = (int)($_GET["przedmiot"] ?? 0);
 
+// admin widzi każdy przedmiot, nauczyciel tylko swoje
 if ($_SESSION["rola"] == "admin") {
 	$stmt = $db->prepare("SELECT nazwa FROM przedmioty WHERE id = ?");
 	$stmt->bind_param("i", $przedmiot_id);
@@ -28,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$wartosc = trim($_POST["wartosc"] ?? "");
 	$opis = trim($_POST["opis"] ?? "");
 
+	// czy uczeń jest zapisany na ten przedmiot
 	$stmt = $db->prepare("SELECT uczen_id FROM uczniowie_przedmioty WHERE uczen_id = ? AND przedmiot_id = ?");
 	$stmt->bind_param("ii", $uczen_id, $przedmiot_id);
 	$stmt->execute();
@@ -35,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$zapisany = $stmt->num_rows > 0;
 	$stmt->close();
 
+	// sprawdzamy ucznia i format oceny (1-6, można dodać + albo -)
 	if (!$zapisany) {
 		$blad = "Ten uczeń nie jest zapisany na ten przedmiot.";
 	} elseif (!preg_match("/^[1-6][+-]?$/", $wartosc)) {
@@ -48,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$ocena_id = $stmt->insert_id;
 		$stmt->close();
 
+		// każda nowa ocena trafia też do historii
 		$stmt = $db->prepare("INSERT INTO oceny_historia (ocena_id, uczen_id, przedmiot_id, akcja, nowa_wartosc, zmienil_id) VALUES (?, ?, ?, 'dodanie', ?, ?)");
 		$stmt->bind_param("iiisi", $ocena_id, $uczen_id, $przedmiot_id, $wartosc, $moje_id);
 		$stmt->execute();
@@ -67,6 +71,7 @@ $stmt->execute();
 $uczniowie = $stmt->get_result();
 $stmt->close();
 
+// oceny według ucznia, żeby łatwo wypisać je w tabeli
 $oceny = [];
 $stmt = $db->prepare("SELECT id, uczen_id, wartosc, opis FROM oceny WHERE przedmiot_id = ? ORDER BY data");
 $stmt->bind_param("i", $przedmiot_id);
@@ -103,6 +108,7 @@ include "includes/naglowek.php";
 				<th>Nowa ocena</th>
 			</tr>
 			<?php
+			// wiersz z nazwą klasy, gdy zaczyna się następna klasa
 			$poprzednia_klasa = "";
 			while ($u = $uczniowie->fetch_assoc()) {
 				if ($u["klasa"] != $poprzednia_klasa) {

@@ -9,13 +9,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$login = trim($_POST["login"] ?? "");
 	$haslo = $_POST["haslo"] ?? "";
 
+	// loginem jest e-mail (admin ma po prostu admin)
 	$stmt = $db->prepare("SELECT id, imie, nazwisko, haslo_hash, rola FROM uzytkownicy WHERE email = ?");
 	$stmt->bind_param("s", $login);
 	$stmt->execute();
 	$uzytkownik = $stmt->get_result()->fetch_assoc();
 	$stmt->close();
 
+	// hasło w bazie jest zahashowane, dlatego password_verify
 	if ($uzytkownik && password_verify($haslo, $uzytkownik["haslo_hash"])) {
+		// nowe id sesji po zalogowaniu
 		session_regenerate_id(true);
 
 		$_SESSION["user_id"] = $uzytkownik["id"];
@@ -23,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$_SESSION["nazwisko"] = $uzytkownik["nazwisko"];
 		$_SESSION["rola"] = $uzytkownik["rola"];
 
+		// każda rola ma swoją stronę startową
 		if ($uzytkownik["rola"] == "admin") {
 			header("Location: nauczyciele.php");
 		} elseif ($uzytkownik["rola"] == "nauczyciel") {
