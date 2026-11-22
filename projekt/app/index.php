@@ -6,7 +6,7 @@ include "includes/naglowek.php";
 		<p>To jest strona naszej szkoły i elektroniczny dziennik lekcyjny.</p>
 		<p>W dzienniku:</p>
 		<ul>
-			<li>uczniowie sprawdzają swoje oceny i średnie,</li>
+			<li>uczniowie sprawdzają swoje oceny,</li>
 			<li>nauczyciele wpisują oceny swoim klasom,</li>
 			<li>każda zmiana oceny jest zapisywana w historii.</li>
 		</ul>
